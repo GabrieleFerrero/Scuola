@@ -35,12 +35,14 @@ def main():
     s.bind(("127.0.0.1", 5000))
     s.listen()
 
-    con = sqlite3.connect('./operations.db')
+    con = sqlite3.connect('/home/gabriele/Scrivania/gabriele/scuola/tpsit/python/esercitazioni/03-preparazione_verifica/operations.db')
     cur = con.cursor()
 
-    for row in cur.execute('SELECT * FROM operations'): database[row[1]] = []
-
-    for row in cur.execute('SELECT * FROM operations'): database[row[1]].append(row[2])
+    for row in cur.execute('SELECT * FROM operations'): 
+        if row[1] in database:
+            database[row[1]].append(row[2])
+        else:
+            database[row[1]] = [row[2]]
 
     con.close()
 
