@@ -35,7 +35,7 @@ def main():
     s.bind(("127.0.0.1", 5000))
     s.listen()
 
-    con = sqlite3.connect('/home/gabriele/Scrivania/gabriele/scuola/tpsit/python/esercitazioni/03-preparazione_verifica/operations.db')
+    con = sqlite3.connect('./operations.db')
     cur = con.cursor()
 
     for row in cur.execute('SELECT * FROM operations'): 
