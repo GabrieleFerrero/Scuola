@@ -4,17 +4,23 @@ from time import sleep
 import sqlite3
 import datetime
 import socket
+import pandas as pd
 from pathlib import Path
 #-----------#
 
 dir_path = str(Path(__file__).parent.resolve())
 print(dir_path)
 
+porte_servizi = pd.read_csv(f"{dir_path}/service-names-port-numbers.csv")
+
 app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
+
+        tempo_iniziale = datetime.datetime.now()
+
         dati = request.form['dati']
 
         print(dati)
@@ -23,11 +29,13 @@ def index():
         porta_min = int(dati.split("#")[1])
         porta_max = int(dati.split("#")[2])
 
-        lista_porte_aperte = []
+        lista_porte = []
 
         for porta in range(porta_min, porta_max+1):
             if check_porta(indirizzo_ip, porta):
-                lista_porte_aperte.append(porta)
+                lista_porte.append((porta, "ON"))
+            else:
+                lista_porte.append((porta, "OFF"))
 
         
         con = sqlite3.connect(f'{dir_path}/db.db')
@@ -39,9 +47,45 @@ def index():
         cur.execute(f"SELECT INDIRIZZI_IP.ID FROM INDIRIZZI_IP WHERE INDIRIZZI_IP.INDIRIZZO_IP = '{indirizzo_ip}'")
         id = cur.fetchall()[0][0]
 
-        cur.execute(f"INSERT INTO PORTE_APERTE (ID_INDIRIZZO_IP, LISTA_PORTE) VALUES ('{id}','{lista_porte_aperte}')")
+        # CREAZIONE HTML
+        page =  f"""<!DOCTYPE html>
+                    <html lang="en">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>Risultato</title>
+                    </head>
+                    <body>
+                        Scansione terminata in {datetime.datetime.now()-tempo_iniziale}
+                        <table border="1">
+                        <tr>
+                            <th>PORTA</th><th>STATO</th><th>SERVIZIO</th>
+                        </tr>"""
+
+
+        for porta_info in lista_porte:
+            try:
+                servizio = (porte_servizi[porte_servizi["Port Number"] == f"{porta_info[0]}"]["Service Name"].values)[0]
+            except:
+                servizio = "assente"
+            page += f"""<tr>
+                            <td>{porta_info[0]}</td><td>{porta_info[1]}</td><td>{servizio}</td>
+                        </tr>"""
+
+            cur.execute(f"INSERT INTO PORTE (ID_INDIRIZZO_IP, PORTA, STATO, SERVIZIO) VALUES ({id},{porta_info[0]},'{porta_info[1]}','{servizio}')")
         con.commit()
         con.close()
+
+        page += """</table>
+                    </body>
+                    </html>"""
+
+
+        with open(f'{dir_path}/templates/fine.html', 'w') as f:
+            f.write(page)
+
+        
 
 
         # redirect("/fine")
