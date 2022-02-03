@@ -45,7 +45,7 @@ def index():
         con.commit()
 
         cur.execute(f"SELECT INDIRIZZI_IP.ID FROM INDIRIZZI_IP WHERE INDIRIZZI_IP.INDIRIZZO_IP = '{indirizzo_ip}'")
-        id = cur.fetchall()[0][0]
+        id_indirizzo_ip = cur.fetchall()[0][0]
 
         # CREAZIONE HTML
         page =  f"""<!DOCTYPE html>
@@ -73,7 +73,12 @@ def index():
                             <td>{porta_info[0]}</td><td>{porta_info[1]}</td><td>{servizio}</td>
                         </tr>"""
 
-            cur.execute(f"INSERT INTO PORTE (ID_INDIRIZZO_IP, PORTA, STATO, SERVIZIO) VALUES ({id},{porta_info[0]},'{porta_info[1]}','{servizio}')")
+            cur.execute(f"INSERT OR IGNORE INTO SERVIZI (PORTA, SERVIZIO) VALUES ({porta_info[0]}, '{servizio}')")
+            cur.execute(f"SELECT SERVIZI.ID FROM SERVIZI WHERE SERVIZI.PORTA = {porta_info[0]}")
+            id_servizio = cur.fetchall()[0][0]
+
+            cur.execute(f"INSERT INTO PORTE (ID_INDIRIZZO_IP, ID_SERVIZIO, PORTA, STATO) VALUES ({id_indirizzo_ip},{id_servizio},{porta_info[0]},'{porta_info[1]}')")
+        
         con.commit()
         con.close()
 
