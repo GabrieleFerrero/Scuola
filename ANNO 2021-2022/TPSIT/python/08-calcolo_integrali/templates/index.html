@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <title>CALCOLO INTEGRALI</title>
+    </head>
+    <body>
+        <h3>Calcolo integrale definito</h3>
+        <form method="post">
+            <table border="1">
+                <tr><th>FUNZIONE</th><th>ESTREMO INFERIORE</th><th>ESTREMO SUPERIORE</th></tr>
+                <tr><td><input type="text" name="d_funzione"></td><td><input type="text" name="d_estremo_i"></td><td><input type="text" name="d_estremo_s"></td></tr>
+            </table>
+            <input type="submit" value="CONFERMA">
+            <input type="reset" value="CANCELLA TUTTO">
+        </form>
+        <h3>Calcolo integrale indefinito</h3>
+        <form method="post">
+            <table border="1">
+                <tr><th>FUNZIONE</th></tr>
+                <tr><td><input type="text" name="i_funzione"></td></tr>
+            </table>
+            <input type="submit" value="CONFERMA">
+            <input type="reset" value="CANCELLA TUTTO">
+        </form>
+        {% if risultato %}
+        <p><strong>RISULTATO:</strong> {{ risultato }}</p>
+        {% endif %}
+    </body>
+</html>
