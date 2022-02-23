@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <title>SOCIAL NETWORK</title>
+    </head>
+    <body>
+        <h3>PUBBLICA IL TUO STATO</h3>
+        <form method="post">
+                <label for="tstato">Contenuto stato: </label>
+                <input type="text" id="tstato" name="cont_s"><br><br>
+                <input type="submit" name="pulsante" value="CONFERMA">
+        </form>
+
+        <h3>STATO RANDOMICO</h3>
+        <form method="post">
+                <table>
+                    <tr><th>Contenuto stato:</th><th>Utente che lo ha pubblicato:</th><th></th></tr>
+                    <tr>
+                        <td>{% if stato_randomico[1] %}
+                        {{ stato_randomico[1] }}
+                        {% endif %}</td>
+                        <td>{% if stato_randomico[0] %}
+                            {{ stato_randomico[0] }}
+                            {% endif %}</td>
+                        <td><input type="submit" name="pulsante" value="CAMBIA"></td>
+                    </tr>
+                </table>
+        </form>
+    </body>
+</html>

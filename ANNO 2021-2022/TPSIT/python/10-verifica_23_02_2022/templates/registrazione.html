@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <title>Flask Intro - Registrazione page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" media="screen">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Registrati</h1>
+      <br>
+      <form action="/registrazione" method="post">
+        <input type="text" placeholder="Username" name="username" value="">
+        <input type="password" placeholder="Password" name="password" value="">
+        <input type="password" placeholder="Conferma Password" name="conferma_password" value="">
+        <input class="btn btn-default" type="submit" value="registrazione">
+      </form>
+      {% if error %}
+        <p>INFO: {{ error }} </p>
+      {% endif %}
+    </div>
+
+    <a href="/">Torna alla pagina di login</a>
+  </body>
+</html>
