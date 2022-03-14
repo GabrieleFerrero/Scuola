@@ -1,4 +1,5 @@
 import requests
+import pandas as pd
 
 id = input("ID: ")
 if(id == "all"):
@@ -9,3 +10,6 @@ else:
 results = eval(results.text)
 
 print(results)
+
+df = pd.DataFrame(results)
+print(df)
